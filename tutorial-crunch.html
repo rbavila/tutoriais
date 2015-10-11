@@ -1,0 +1,578 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>Tutorial: crunch</title>
+	<link rel="stylesheet" href="tutorial.css">
+	<script src="tutorial.js"></script>
+</head>
+
+<body>
+<article>
+<header>
+	<h1>Tutorial: Usando o gerador de palavras “crunch”</h1>
+	<p>por Rafael Ávila<br>
+	2015/10/07
+	</p>	
+</header>
+
+<!----------------------------------------------------------------------------->
+<section class="warning">
+<h2>Antes de começar</h2>
+<p>
+A intenção deste tutorial é proporcionar um recurso de aprendizado no uso do crunch.  Como qualquer ferramenta de software, o crunch pode ser usado para o bem ou para o mal.  Nossa intenção é que ele seja usado para o bem.  <em>Certifique-se de dar conhecimento e obter autorização dos responsáveis ao usar o crunch para realizar ataques em bases de senhas de usuários ou redes wireless que não sejam seus</em>.
+</p>
+</section>
+
+<!----------------------------------------------------------------------------->
+<section>
+<h2>O que é o crunch?</h2>
+<p>
+O crunch é um programa para gerar listas de palavras, também conhecidas como <em>dicionários</em> (sim, é estranho, mas é isso mesmo).  O que o crunch faz é, basicamente, realizar combinações e/ou permutações a partir de um conjunto de caracteres ou de palavras.  Observe que uma “palavra”, neste contexto, é simplesmente uma sequência de caracteres &mdash; ou seja, não precisa necessariamente significar algo.
+</section>
+
+<!----------------------------------------------------------------------------->
+<section>
+<h2>Para que serve o crunch?</h2>
+<p>
+Seu uso mais frequente é na geração de dicionários para ataques a bases de senhas ou outras informações criptografadas (ex.: chave da rede wifi).  A ideia é que a ferramenta de ataque teste cada uma das palavras do dicionário na tentativa de encontrar a senha ou chave em questão.
+</section>
+
+<!----------------------------------------------------------------------------->
+<section>
+<h2>De onde posso obter o crunch?</h2>
+<p>
+Algumas distribuições GNU/Linux como o <a href="https://www.kali.org" target="_blank">Kali</a> possuem pacotes pré-compilados, portanto basta instalá-lo (dica: o <a href="https://www.kali.org/downloads" target="_blank">DVD de instalação</a> do Kali serve como Live DVD e já vem com o crunch instalado).  Também é possível baixar o código-fonte de <a href="http://sourceforge.net/projects/crunch-wordlist">http://sourceforge.net/projects/crunch-wordlist</a> e compilá-lo você mesmo.
+</section>
+
+<!----------------------------------------------------------------------------->
+<section>
+<h2>Como se usa o crunch?</h2>
+<p>
+Para ilustrar, um rápido exemplo. Se tivéssemos que criar uma lista de todas as “palavras” de 2&nbsp;letras possíveis de serem formadas somente com as letras ‘A’ e ‘B’, teríamos o seguinte:
+
+<div class="texto-pre">AA
+AB
+BA
+BB
+</div>
+
+<p>
+É possível gerar essa sequência com o crunch da seguinte maneira:
+
+<div class="shell">$ <span class="cmd">crunch 2 2 AB</span>
+Crunch will now generate the following amount of data: 12 bytes
+0 MB
+0 GB
+0 TB
+0 PB
+Crunch will now generate the following number of lines: 4 
+AA
+AB
+BA
+BB
+</div>
+<div class="obs">
+Observe que o cifrão ($) na primeira linha no exemplo acima é somente o prompt do terminal, e não deve ser digitado.
+</div>
+
+<p>
+O significado dos parâmetros é o seguinte:
+
+<p>
+<span class="cmdsynopsis">crunch &lt;min&gt; &lt;max&gt; &lt;charset&gt;</span>
+
+<p>
+onde:
+
+<ul>
+	<li><span class="cmdsynopsis">&lt;min&gt;</span> é o menor tamanho de palavra gerada;</li>
+	<li><span class="cmdsynopsis">&lt;max&gt;</span> é o maior tamanho de palavra gerada;</li>
+	<li><span class="cmdsynopsis">&lt;charset&gt;</span> é o conjunto de caracteres com os quais serão feitas as combinações.</li>
+</ul>
+
+<p>
+No exemplo anterior queríamos somente palavras de 2&nbsp;letras, por isso os parâmetros <span class="cmdsynopsis">&lt;min&gt;</span> e <span class="cmdsynopsis">&lt;max&gt;</span> ficaram iguais.  Vejamos outro exemplo, agora gerando palavras de 2 e de 3&nbsp;letras:
+
+<div class="shell">$ <span class="cmd">crunch 2 3 AB</span>
+Crunch will now generate the following amount of data: 44 bytes
+0 MB
+0 GB
+0 TB
+0 PB
+Crunch will now generate the following number of lines: 12 
+AA
+AB
+BA
+BB
+AAA
+AAB
+ABA
+ABB
+BAA
+BAB
+BBA
+BBB
+</div>
+
+<p>
+Você provavelmente vai querer armazenar a lista de palavras em um arquivo separado, ao invés de mostrá-las na tela.  Podemos passar um parâmetro adicional ao crunch para fazer isso:
+
+<div class="shell">$ <span class="cmd">crunch 2 4 ABCDE -o dic.txt</span>
+Crunch will now generate the following amount of data: 3700 bytes
+0 MB
+0 GB
+0 TB
+0 PB
+Crunch will now generate the following number of lines: 775 
+
+crunch: 100% completed generating output
+</div>
+
+<div class="dica">
+Antes de olhar o conteúdo do arquivo gerado, tente determinar quais serão as primeiras palavras geradas e como a sequência se desenvolve.
+</div>
+
+<p>
+Neste exemplo, fizemos o crunch armazenar a lista de palavras em um arquivo chamado <span class="nomearq">dic.txt</span>.  Os parâmetros passados a ele indicaram a geração de palavras de 2 a 4&nbsp;caracteres, formadas a partir das letras ‘A’, ‘B’, ‘C’, ‘D’ e ‘E’.  Repare que o crunch informa, na tela, o total de palavras geradas &mdash; neste caso, 775!
+
+<div class="exercicios">
+<ol>
+	<li>Determine os parâmetros necessários para gerar uma lista de palavras de 4 a 8&nbsp;caracteres usando somente as vogais minúsculas.
+		<div class="resposta" onclick="mostrarResposta(this)">
+			<span class="cmdsynopsis">crunch 4 8 aeiou</span>
+		</div>
+	</li>
+	<li>Determine os parâmetros necessários para gerar uma lista de palavras de 2 a 5&nbsp;caracteres usando somente as letras de ‘A’ até ‘E’ e também os dígitos de 0 a 9.
+		<div class="resposta" onclick="mostrarResposta(this)">
+			<span class="cmdsynopsis">crunch 2 5 ABCDE0123456789</span>
+		</div>
+	</li>
+</ol>
+</div>
+</section>
+
+<!----------------------------------------------------------------------------->
+<section>
+<h2>Usando charsets pré-determinados</h2>
+<p>
+É bastante comum que queiramos usar charsets relativamente grandes, por exemplo o alfabeto inteiro e/ou os dígitos de 0 a&nbsp;9.  Além disso, quando usamos letras, normalmente queremos explorar combinações de letras maiúsculas e minúsculas.
+
+<p>
+Prevendo esses casos, e para evitar que o usuário tenha que digitar uma linha de comando quilométrica, o crunch já vem com alguns charsets pré-determinados: maiúsculas, minúsculas, números, símbolos, e várias combinações entre eles.
+
+<p>
+Para usar um charset desses, devemos empregar a seguinte forma do comando:
+
+<p>
+<span class="cmdsynopsis">crunch &lt;min&gt; &lt;max&gt; -f /caminho/para/o/arquivo/charset.lst &lt;nome do charset&gt;</span>
+
+<p>
+onde:
+
+<ul>
+	<li><span class="cmdsynopsis">/caminho/para/o/arquivo/charset.lst</span> é o caminho, no sistema de arquivos, para o arquivo <span class="nomearq">charset.lst</span>, que faz parte da instalação do crunch.  Por exemplo, no Kali Linux ele fica instalado em <span class="nomearq">/usr/share/crunch/charset.lst</span>;</li>
+	<li><span class="cmdsynopsis">&lt;nome do charset&gt;</span> é o nome do charset que queremos usar.  Alguns deles são:
+	<ul>
+		<li><span class="cmdsynopsis">numeric</span>: dígitos de 0 a&nbsp;9;</li>
+		<li><span class="cmdsynopsis">lalpha</span>: letras minúsculas;</li>
+		<li><span class="cmdsynopsis">lalpha-numeric</span>: letras minúsculas e dígitos de 0 a&nbsp;9;</li>
+		<li><span class="cmdsynopsis">mixalpha-numeric-all</span>: letras minúsculas, maiúsculas, símbolos (+, *, $, @, etc.) e dígitos de 0 a&nbsp;9.
+	</ul></li>
+</ul>
+
+<p>
+Por exemplo, para gerar um dicionário com palavras de 2 a 3 caracteres misturando letras minúsculas e números, podemos fazer:
+<div class="shell">$ <span class="cmd">crunch 2 3 -f /usr/share/crunch/charset.lst lalpha-numeric -o dic.txt</span>
+Crunch will now generate the following amount of data: 190512 bytes
+0 MB
+0 GB
+0 TB
+0 PB
+Crunch will now generate the following number of lines: 47952 
+
+crunch: 100% completed generating output
+</div>
+<div class="obs">
+Note que, neste exemplo, estamos considerando que o arquivo com os charsets está em <span class="nomearq">/usr/share/crunch/charset.lst</span>.  Se for necessário, adapte esse parâmetro para o correspondente na sua instalação.
+</div>
+</section>
+
+<p>
+A lista completa de charsets disponíveis pode ser visualizada no próprio arquivo <a href="http://sourceforge.net/p/crunch-wordlist/code/ci/master/tree/charset.lst" target="_blank">charset.lst</a> &mdash; são os nomes à esquerda do sinal de igual.
+
+<div class="exercicios">
+<ol>
+	<li>Gere um dicionário com palavras de 4 a 6 caracteres compostas de letras maiúsculas somente, salvando o resultado em um arquivo chamado <span class="nomearq">words.txt</span>. <em>Atenção: a solução para este exercício gera um arquivo de 2&nbsp;GB!!</em>
+		<div class="resposta" onclick="mostrarResposta(this)">
+			<span class="cmdsynopsis">crunch 4 6 -f /usr/share/crunch/charset.lst ualpha -o words.txt</span>
+		</div>
+	</li>
+	<li>Repita o exercício anterior, porém passando para o crunch uma opção para compactar o dicionário gerado.
+		<div class="resposta" onclick="mostrarResposta(this)">
+			<span class="cmdsynopsis">crunch 4 6 -f /usr/share/crunch/charset.lst ualpha -o words.txt -z bzip2</span>
+		</div>
+	</li>
+	<li>Gere um dicionário com palavras de 2 e 3 caracteres contendo letras minúsculas, números e símbolos, incluindo o espaço em branco.
+		<div class="resposta" onclick="mostrarResposta(this)">
+			<span class="cmdsynopsis">crunch 2 3 -f /usr/share/crunch/charset.lst lalpha-numeric-symbol14-space -o words.txt -z bzip2</span>
+		</div>
+	</li>
+</ol>
+</div>
+
+<!----------------------------------------------------------------------------->
+<section>
+<h2>Usando templates</h2>
+<p>
+Por vezes queremos gerar palavras que sigam uma certa ordem de caracteres, ex.: começar sempre com uma letra maiúscula seguida de um número.  Muitas vezes também queremos que as palavras contenham uma parte fixa, que não varie.  Por exemplo, considere a sequência “teste0”, “teste1”, “teste2”, ... (a parte fixa é o prefixo “teste”).
+
+<p>
+Nesses casos, ao invés de passar um charset ao crunch, podemos passar um <em>template</em>, ou seja, um padrão de letras que pode conter uma parte fixa e alguns símbolos que indicam como completar a parte variável.
+
+<p>
+Por exemplo, para gerar a sequência acima, tendo o prefixo “teste” seguido de uma variação de números, podemos fazer o seguinte:
+<div class="shell">$ <span class="cmd">crunch 6 6 -t teste%</span>
+Crunch will now generate the following amount of data: 70 bytes
+0 MB
+0 GB
+0 TB
+0 PB
+Crunch will now generate the following number of lines: 10 
+teste0
+teste1
+teste2
+teste3
+teste4
+teste5
+teste6
+teste7
+teste8
+teste9
+</div>
+
+<p>
+O que fizemos de diferente neste caso:
+<ul>
+	<li>Não foi passado um charset, e sim um template;
+	<li>O template foi indicado através da opção <span class="cmdsynopsis">-t</span>;</li>
+	<li>O último caractere do template é um sinal de porcentagem, o que indica ao crunch que nesse ponto ele deve colocar dígitos de 0 a&nbsp;9.  Outros caracteres possíveis são:
+	<ul>
+		<li><span class="cmdsynopsis">@</span> (arroba) para gerar letras minúsculas de ‘a’ até ‘z’;</li>
+		<li><span class="cmdsynopsis">,</span> (vírgula) para letras maiúsculas de ‘A’ até ‘Z’;</li>
+		<li><span class="cmdsynopsis">^</span> (circunflexo) para símbolos como ‘=’, ‘+’, ‘$’, etc.</li>
+	</ul>
+	Qualquer caractere no template que não seja <span class="cmdsynopsis">%</span>, <span class="cmdsynopsis">@</span>, <span class="cmdsynopsis">,</span> ou <span class="cmdsynopsis">^</span> é tratado como parte fixa.  Repare também que os tamanhos mínimo e máximo devem ser iguais ao número de caracteres no template.</li>
+</ul>
+
+<p>
+Outro exemplo: vamos gerar palavras compostas por 1&nbsp;letra maiúscula, 1&nbsp;letra minúscula e 2&nbsp;dígitos, sempre nessa ordem.  A primeira palavra gerada será “Aa00”, depois “Aa01” e assim por diante até “Aa99”, depois “Ab00”, “Ab01”, ... até “Zz99”.  Como a quantidade de palavras geradas será muito grande (67600), vamos salvar o resultado em um arquivo chamado <span class="nomearq">palavras.txt</span>.
+<div class="shell">$ <span class="cmd">crunch 4 4 -t ,@%% -o palavras.txt</span>
+Crunch will now generate the following amount of data: 338000 bytes
+0 MB
+0 GB
+0 TB
+0 PB
+Crunch will now generate the following number of lines: 67600 
+
+crunch: 100% completed generating output
+</div>
+
+<div class="exercicios">
+<ol>
+	<li>Gere um dicionário cujas palavras comecem com “pass” e sejam seguidas de dois números e um símbolo.
+		<div class="resposta" onclick="mostrarResposta(this)">
+			<span class="cmdsynopsis">crunch 7 7 -t pass%%^</span>
+		</div>
+	</li>
+	<li>Gere um dicionário cujas palavras comecem com “p@ss” e sejam seguidas de dois números e um símbolo (dica: será necessário usar a opção <span class="cmdsynopsis">-l</span> neste caso).
+		<div class="resposta" onclick="mostrarResposta(this)">
+			<span class="cmdsynopsis">crunch 7 7 -t p@ss%%^ -l a@aaaaa</span>
+		</div>
+	</li>
+	<li>Gere uma lista de palavras que comecem com letra maiúscula, sejam seguidas por um número, duas letras minúsculas e terminem em “word”.
+		<div class="resposta" onclick="mostrarResposta(this)">
+			<span class="cmdsynopsis">crunch 8 8 -t ,%@@word</span>
+		</div>
+	</li>
+	<li>Qual a sequência de palavras gerada pelo comando <span class="cmd">crunch 4 4 -t @%%%</span> ?
+		<div class="resposta" onclick="mostrarResposta(this)">
+			<p>A sequência “a000”, “a001”, ..., “a999”, “b000”, “b001”, ..., “z999”.
+		</div>
+	</li>
+	<li>Qual a sequência de palavras gerada pelo comando <span class="cmd">crunch 4 4 -t @%%% -d 2%</span> ?
+		<div class="resposta" onclick="mostrarResposta(this)">
+			<p>Quase a mesma sequência, porém excluindo casos de 3&nbsp;números repetidos &mdash; ou seja, não serão geradas as palavras “a000”, “a111”, e assim por diante.  Isso é justamente o que faz a opção <span class="cmdsynopsis">-d 2%</span>, que significa “no máximo 2&nbsp;caracteres consecutivos da classe dos números”.
+		</div>
+	</li>
+</ol>
+</div>
+
+<p>
+Ao gerar um dicionário com esse tipo de combinações, muitas vezes não se quer usar todos os caracteres de uma determinada classe.  Por exemplo, pode ser desejado trabalhar com as letras minúsculas de ‘a’ até ‘e’ somente, e não de ‘a’ até ‘z’.
+
+<p>
+Para esses casos, o crunch permite que sejam especificados os caracteres a serem usados em cada classe de caracteres (minúsculas, maiúsculas, números ou símbolos).  Por exemplo, supondo que se deseja gerar combinações de letras minúsculas seguidas de números, porém usando somente as letras ‘a’, ‘b’ e ‘c’ e os números 4 e&nbsp;5.  Se quisermos palavras com apenas uma&nbsp;letra e um&nbsp;número, o comando ficará assim:
+
+<div class="shell">$ <span class="cmd">crunch 2 2 abc + 45 + -t @%</span>
+Crunch will now generate the following amount of data: 18 bytes
+0 MB
+0 GB
+0 TB
+0 PB
+Crunch will now generate the following number of lines: 6 
+a4
+a5
+b4
+b5
+c4
+c5
+</div>
+
+<p>
+Se desejarmos palavras com duas letras seguidas de um&nbsp;número, podemos fazer:
+
+<div class="shell">$ <span class="cmd">crunch 3 3 abc + 45 + -t @@%</span>
+Crunch will now generate the following amount of data: 72 bytes
+0 MB
+0 GB
+0 TB
+0 PB
+Crunch will now generate the following number of lines: 18 
+aa4
+aa5
+ab4
+ab5
+ac4
+ac5
+ba4
+ba5
+bb4
+bb5
+bc4
+bc5
+ca4
+ca5
+cb4
+cb5
+cc4
+cc5
+</div>
+
+<p>
+O parâmetro da opção <span class="cmdsynopsis">-t</span> continua com o mesmo significado, mas agora estamos dizendo ao crunch quais caracteres queremos usar em cada categoria.  A forma de dizer isso a ele é especificada nos parâmetros passados entre o tamanho máximo (3, no último exemplo) e a opção <span class="cmdsynopsis">-t</span>.  Esses parâmetros são os seguintes, <em>necessariamente nesta ordem</em>:
+<ul>
+	<li>Quais letras minúsculas queremos usar;</li>
+	<li>Quais letras maiúsculas queremos usar;</li>
+	<li>Quais números queremos usar;</li>
+	<li>Quais símbolos queremos usar.</li>
+</ul>
+
+<p>
+Nem sempre precisamos usar todas as categorias de caracteres no template.  Nesse caso, devemos passar o caractere ‘+’ (sinal de mais) no parâmetro correspondente a ela.  No exemplo acima, utilizamos somente letras minúsculas e números (repare que o template tem somente <span class="cmdsynopsis">@</span> e <span class="cmdsynopsis">%</span>); portanto, passamos o caractere ‘+’ no lugar das letras maiúsculas e dos símbolos.  Vejamos mais alguns exemplos (os parâmetros correspondentes aos grupos estão destacados para facilitar sua visualização):
+
+<ul>
+	<li>palavras de 3&nbsp;caracteres com uma vogal minúscula seguida de duas letras ‘X’ ou ‘Y’ maiúsculas:<br>
+		<span class="cmd">crunch 3 3 <span class="destaque">aeiou XY + +</span> -t @,,</span>
+	</li>
+	<li>palavras de 6&nbsp;caracteres começando com duas letras maiúsculas ‘A’ ou ‘B’, seguidas por 3&nbsp;números e terminando em ‘*’ ou ‘$’:<br>
+		<span class="cmd">crunch 6 6 <span class="destaque">+ AB 0123456789 *$</span> -t ,,%%%^</span>
+	</li>
+	<li>palavras de 4&nbsp;caracteres com dois números pares seguidos de uma marca de pontuação e mais uma letra minúscula entre ‘x’ e ‘z’:<br>
+		<span class="cmd">crunch 4 4 <span class="destaque">xyz + 2468 '.,;!?'</span> -t %%^@</span><br>
+		(neste caso, o parâmetro correspondente aos símbolos tem que ser colocado entre aspas simples para não ser interpretado pelo terminal)
+	</li>
+	<li>palavras de dois&nbsp;caracteres formadas por uma letra minúscula e um número ímpar:<br>
+		<span class="cmd">crunch 2 2 <span class="destaque">+ + 13579 +</span> -t @%</span><br>
+	</li>
+</ul>
+
+<p>
+Observe que, no último exemplo, estamos usando letras minúsculas mas ainda assim passamos um ‘+’ no parâmetro correspondente a elas.  Nesse caso, o crunch usa o conjunto completo (letras de ‘a’ até ‘z’).
+
+<div class="exercicios">
+<ol>
+	<li>Gere um dicionário cujas palavras comecem com qualquer letra do nome “pernambuco” e sejam seguidas por 4&nbsp;números entre 4 e&nbsp;8.
+		<div class="resposta" onclick="mostrarResposta(this)">
+			<span class="cmdsynopsis">crunch 5 5 pernambuco + 45678 + -t @%%%%</span>
+		</div>
+	</li>
+	<li>Gere um dicionário cujas palavras comecem com qualquer letra do nome “arara” e sejam seguidas por 3&nbsp;caracteres ‘+’, ‘-’, ‘*’ ou ‘/’.  Salve o resultado em um arquivo chamado <span class="nomearq">saida.txt</span>.
+		<div class="resposta" onclick="mostrarResposta(this)">
+			<div>
+				<span class="cmdsynopsis">crunch 4 4 ar + + *-/+ -t @^^^ -o saida.txt</span>
+				<p>Percebeu que neste caso o parâmetro dos símbolos não pode começar nem por ‘+’ nem por ‘-’?
+			</div>
+		</div>
+	</li>
+</ol>
+</div>
+
+</section>
+
+<!----------------------------------------------------------------------------->
+<section>
+<h2>Usando permutações simples</h2>
+<p>
+Uma última forma de usar o crunch é instruindo-o a gerar somente permutações simples, isto é, combinações de caracteres em que não haja repetições.  Por exemplo, no início do tutorial vimos as combinações possíveis de 2&nbsp;caracteres usando as letras ‘A’ e ‘B’:
+
+<div class="texto-pre">AA
+AB
+BA
+BB
+</div>
+
+<p>
+Se considerarmos somente as permutações sem repetição de caracteres, teremos:
+
+<div class="texto-pre">AB
+BA
+</div>
+
+<p>
+O crunch permite gerar esse tipo de combinações através da opção <span class="cmdsynopsis">-p</span>.  O exemplo a seguir gera todas as permutações simples com as letras ‘a’, ‘b’ e ‘c’:
+
+<div class="shell">$ <span class="cmd">crunch 1 1 -p abc</span>
+Crunch will now generate approximately the following amount of data: 24 bytes
+0 MB
+0 GB
+0 TB
+0 PB
+Crunch will now generate the following number of lines: 6 
+abc
+acb
+bac
+bca
+cab
+cba
+</div>
+
+<p>
+Quando essa opção é usada, os parâmetros <span class="cmdsynopsis">&lt;min&gt;</span> e <span class="cmdsynopsis">&lt;max&gt;</span> são ignorados, mas ainda devem estar presentes na linha de comando.  Nos exemplos aqui usaremos simplesmente 1 e&nbsp;1.
+
+<p>
+IMPORTANTE: ao usar a opção <span class="cmdsynopsis">-p</span>, ela deve ser sempre a última opção na linha de comando.  Por exemplo, se desejarmos salvar o dicionário gerado em um arquivo, devemos passar a opção <span class="cmdsynopsis">-o</span> antes da <span class="cmdsynopsis">-p</span>.  Exemplo:
+
+<div class="shell">$ <span class="cmd">crunch 1 1 -o dic.txt -p abc</span>
+Crunch will now generate approximately the following amount of data: 24 bytes
+0 MB
+0 GB
+0 TB
+0 PB
+Crunch will now generate the following number of lines: 6 
+
+crunch: 100% completed generating output
+</div>
+
+<p>
+Esse modo de operação do crunch permite também que seja passado um conjunto de palavras a serem permutadas, em vez de caracteres individuais.  Por exemplo, para gerar todas as permutações simples entre as palavras “bar”, “boo” e “foo”, podemos fazer:
+
+<div class="shell">$ <span class="cmd">crunch 1 1 -p bar boo foo</span>
+Crunch will now generate approximately the following amount of data: 60 bytes
+0 MB
+0 GB
+0 TB
+0 PB
+Crunch will now generate the following number of lines: 6 
+barboofoo
+barfooboo
+boobarfoo
+boofoobar
+foobarboo
+fooboobar
+</div>
+
+<p>
+O modo de permutação pode ainda ser combinado com o uso de templates.  Neste caso, o template não pode ter uma parte fixa: qualquer caractere que não seja <span class="cmdsynopsis">%</span>, <span class="cmdsynopsis">@</span>, <span class="cmdsynopsis">,</span> ou <span class="cmdsynopsis">^</span> será substituído pelos parâmetros informados no <span class="cmdsynopsis">-p</span>.
+
+<p>
+No exemplo a seguir, vamos gerar palavras que comecem com os prefixos “bar” ou “foo” e terminem com um dígito.  Será usada a letra ‘p’ minúscula no template para representar o lugar onde devem ser colocados os prefixos passados ao <span class="cmdsynopsis">-p</span>.
+
+<div class="shell">$ <span class="cmd">crunch 2 2 -t p% -p bar foo</span>
+Crunch will now generate approximately the following amount of data: 100 bytes
+0 MB
+0 GB
+0 TB
+0 PB
+Crunch will now generate the following number of lines: 20 
+bar0
+bar1
+bar2
+bar3
+bar4
+bar5
+bar6
+bar7
+bar8
+bar9
+foo0
+foo1
+foo2
+foo3
+foo4
+foo5
+foo6
+foo7
+foo8
+foo9
+</div>
+<div class="obs">
+Observe que, como estão sendo usados templates, os números iniciais voltam a ser importantes!
+</div>
+
+<div class="exercicios">
+<ol>
+	<li>Determine, inicialmente sem usar o crunch, quais seriam todas as palavras formadas por permutações simples das letras ‘A’, ‘X’ e ‘Z’.  Em seguida, determine os parâmetros que devem ser passados ao crunch para gerar esse dicionário.  
+		<div class="resposta" onclick="mostrarResposta(this)">
+			<p>Serão 6&nbsp;palavras: “AXZ”, “AZX”, “XAZ”, “XZA”, “ZAX” e “ZXA”.  O comando para gerá-las é <span class="cmd">crunch 1 1 -p AXZ</span>.
+		</div>
+	</li>
+	<li>Repita o exercício anterior considerando as letras ‘b’, ‘a’ e ‘k’.  Por que o resultado é diferente do que você imaginou?
+		<div class="resposta" onclick="mostrarResposta(this)">
+			<p>Quando usamos o modo de permutação, o crunch coloca em ordem alfabética os itens passados à opção <span class="cmdsynopsis">-p</span>, portanto ele começa por “abk” e não por “bak” como você foi induzido a fazer.  Observe, porém, que a lista de palavras produzida contém exatamente os mesmos elementos, só em ordem diferente.
+		</div>
+	</li>
+	<li>Gere um dicionário de palavras que exploram todas as permutações simples dos componentes do nome Joaquim José da Silva Xavier. (Obs.: o crunch vai fazer uma observação sobre uso de caracteres acentuados (unicode); isso não é problema para o nosso exercício, portanto simplesmente responda ‘y’ e deixe ele continuar a execução.)
+		<div class="resposta" onclick="mostrarResposta(this)">
+			<span class="cmd">crunch 1 1 -p Joaquim José da Silva Xavier</span>
+		</div>
+	</li>
+	<li>Gere um dicionário de palavras que começam com dois dígitos seguidos de alguma parte do nome "Maria Antonieta de las Nieves".  Esse dicionário deve ser salvo no arquivo <span class="nomearq">astucia.txt</span>.
+		<div class="resposta" onclick="mostrarResposta(this)">
+			<span class="cmd">crunch 3 3 -o astucia.txt -t %%p -p Maria Antonieta de las Nieves</span>
+		</div>
+	</li>
+</ol>
+</div>
+</section>
+
+<!----------------------------------------------------------------------------->
+<section>
+<h2>Por fim...</h2>
+<p>
+Lembre-se que, dependendo dos parâmetros usados, o crunch pode gerar um dicionário MUITO grande (da ordem dos GB ou mesmo TB!).  A opção <span class="cmdsynopsis">-z</span> ajuda permitindo a compactação dos dados, mas certifique-se de que o software que vai usar o dicionário suporta recebê-lo na forma compactada.
+
+<p>
+Uma alternativa para não precisar armazenar o dicionário é gerá-lo através de um <span class="ing">pipe</span>, alimentando diretamente o software que vai usá-lo.  O exemplo abaixo ilustra o uso do aircrack-ng recebendo um dicionário dessa forma:
+<div class="shell">$ <span class="cmd">crunch 6 6 -t @@%%%% | aircrack-ng -e MeuWifi -w - captura.cap</span>
+Crunch will now generate the following amount of data: 47320000 bytes
+45 MB
+0 GB
+0 TB
+0 PB
+Crunch will now generate the following number of lines: 6760000 
+Opening captura.cap
+Opening captura.capit...
+Reading packets, please wait...
+[...]
+</div>
+
+<p>
+That's all folks!
+</section>
+
+</article>
+</body>
+
+</html>
